@@ -1,5 +1,5 @@
 [package]
-name = "tpp"
+name = "tpp-core"
 version = "0.1.0"
 authors = ["James Whaley <juicy66173@gmail.com>"]
 description = "Twitch Plays Pokemon - but even more chaotic."
@@ -9,8 +9,5 @@ edition = "2018"
 license = "MIT"
 publish = false
 
-[workspace]
-members = ["core", "web-app"]
-
 [dependencies]
-tpp-core = { path = "./core" }
+serde = { version = "1", features = ["derive"] }

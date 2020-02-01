@@ -1,0 +1,36 @@
+[package]
+name = "tpp-web-app"
+version = "0.1.0"
+authors = ["James Whaley <juicy66173@gmail.com>"]
+description = "Twitch Plays Pokemon - but even more chaotic."
+repository = "https://github.com/Juici/tpp"#
+edition = "2018"
+
+license = "MIT"
+publish = false
+
+[lib]
+crate-type = ["cdylib", "rlib"]
+
+[features]
+default = ["console_error_panic_hook"]
+
+[dependencies]
+anyhow = "1.0"
+log = "0.4"
+serde = { version = "1", features = ["derive"] }
+tpp-core = { path = "../core" }
+wasm-bindgen = "=0.2.58"
+web_logger = "0.2"
+yew = { git = "https://github.com/yewstack/yew.git", hash = "063c25472efcc79c017eecd73da9fbd062aa3550" }
+
+# The `console_error_panic_hook` crate provides better debugging of panics by
+# logging them with `console.error`. This is great for development, but requires
+# all the `std::fmt` and `std::panicking` infrastructure, so isn't great for
+# code size when deploying.
+console_error_panic_hook = { version = "0.1.6", optional = true }
+
+# `wee_alloc` is a tiny allocator for wasm that is only ~1K in code size
+# compared to the default allocator's ~10K. It is slower than the default
+# allocator, however.
+wee_alloc = { version = "0.4.5", optional = true }

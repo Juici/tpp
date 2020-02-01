@@ -1,0 +1,12 @@
+[package]
+name = "tpp"
+version = "0.1.0"
+authors = ["James Whaley <juicy66173@gmail.com>"]
+description = "Twitch Plays Pokemon - but even more chaotic."
+repository = "https://github.com/Juici/tpp"
+edition = "2018"
+
+license = "MIT"
+publish = false
+
+[dependencies]

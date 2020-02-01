@@ -52,7 +52,7 @@ impl Component for Btn {
     fn view(&self) -> Html {
         html! {
             <div
-                class=format!("tpp-btn {}", self.mapping.class_name())
+                class=("tpp-btn", self.mapping.class_name())
                 ontouchstart=self.link.callback(|_| ButtonState::Down)
                 ontouchend=self.link.callback(|_| ButtonState::Up)
                 onmousedown=self.link.callback(|_| ButtonState::Down)

@@ -25,7 +25,7 @@ pub enum Msg {
 
 pub enum WsAction {
     Connect,
-    Disconnect,
+    //    Disconnect,
     ConnectionEstablished,
     ConnectionLost,
     ButtonEvent(ButtonEvent),
@@ -44,7 +44,7 @@ impl Component for App {
     type Properties = ();
 
     fn create(_: Self::Properties, mut link: ComponentLink<Self>) -> Self {
-//        link.send_message(Msg::WsAction(WsAction::Connect));
+        link.send_message(Msg::WsAction(WsAction::Connect));
 
         App {
             ws_service: WebSocketService::new(),
@@ -99,13 +99,15 @@ impl App {
                     .unwrap();
                 self.ws = Some(task);
             }
-            WsAction::Disconnect => {
-                log::debug!("disconnected from websocket");
-
-                self.ws.take();
-            }
+            //            WsAction::Disconnect => {
+            //                log::debug!("disconnected from websocket");
+            //
+            //                self.ws.take();
+            //            }
             WsAction::ConnectionEstablished => {
                 log::debug!("connected from websocket");
+
+                return false;
             }
             WsAction::ConnectionLost => {
                 log::debug!("lost connection to websocket");

@@ -4,8 +4,8 @@ use std::thread;
 use enigo::{Enigo, Key, KeyboardControllable};
 use tpp_core::button::{Button, ButtonEvent, ButtonState};
 
-const SELECT: Key = Key::Layout('[');
-const START: Key = Key::Layout(']');
+const SELECT: Key = Key::Layout('x');
+const START: Key = Key::Layout('c');
 
 const UP: Key = Key::UpArrow;
 const DOWN: Key = Key::DownArrow;

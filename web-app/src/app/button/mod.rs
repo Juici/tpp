@@ -3,7 +3,7 @@ pub mod bumpers;
 pub mod dpad;
 pub mod options;
 
-use stdweb::web::event::MouseButton;
+//use stdweb::web::event::MouseButton;
 use tpp_core::button::{Button, ButtonEvent, ButtonState};
 use yew::prelude::*;
 
@@ -61,34 +61,16 @@ impl Component for Btn {
             classes.push("tpp-btn-down");
         }
 
-        let onmouseover = self.link.callback(|event: MouseOverEvent| {
-            if event.buttons().is_down(MouseButton::Left) {
-                ButtonState::Down
-            } else {
-                ButtonState::Up
-            }
-        });
-
-        let onpointerover = self.link.callback(|event: PointerOverEvent| {
-            if event.pressure() > 0.0 {
-                ButtonState::Down
-            } else {
-                ButtonState::Up
-            }
-        });
-
         html! {
             <div
                 class=classes
-                ontouchstart=self.link.callback(|_| ButtonState::Down)
-                ontouchenter=self.link.callback(|_| ButtonState::Down)
-                ontouchend=self.link.callback(|_| ButtonState::Up)
-                ontouchcancel=self.link.callback(|_| ButtonState::Up)
+//                ontouchstart=self.link.callback(|_| ButtonState::Down)
+//                ontouchenter=self.link.callback(|_| ButtonState::Down)
+//                ontouchend=self.link.callback(|_| ButtonState::Up)
+//                ontouchcancel=self.link.callback(|_| ButtonState::Up)
                 onmousedown=self.link.callback(|_| ButtonState::Down)
                 onmouseup=self.link.callback(|_| ButtonState::Up)
                 onmouseout=self.link.callback(|_| ButtonState::Up)
-                onmouseover=&onmouseover
-                onpointerover=&onpointerover
                 >
                 <span class="tpp-btn-icon">{ self.props.mapping.text() }</span>
             </div>

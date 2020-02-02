@@ -4,7 +4,8 @@ use yew::format::Bincode;
 use yew::prelude::worker::*;
 use yew::services::websocket::{WebSocketService, WebSocketStatus, WebSocketTask};
 
-const WS_ENDPOINT: &str = "ws://localhost:9001/";
+//const WS_ENDPOINT: &str = "ws://localhost:9001/";
+const WS_ENDPOINT: &str = "wss://james-tjjg.localhost.run/";
 
 #[derive(Debug)]
 pub enum Msg {

@@ -1358,7 +1358,6 @@ dependencies = [
  "console_error_panic_hook",
  "log 0.4.8",
  "serde",
- "stdweb",
  "tpp-core",
  "wasm-bindgen",
  "web_logger",

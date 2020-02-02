@@ -5,7 +5,10 @@ use tpp_core::ws::{WsRequest, WsResponse};
 use yew::prelude::*;
 
 use self::agent::NetworkAgent;
-use self::button::DPad;
+use self::button::ab::AB;
+use self::button::bumpers::Bumpers;
+use self::button::dpad::DPad;
+use self::button::options::Options;
 
 pub enum Msg {
     WsResponse(WsResponse),
@@ -42,7 +45,12 @@ impl Component for App {
 
         html! {
             <div class="tpp-app">
-                <DPad onbuttonevent=&onbuttonevent />
+                <Bumpers onbuttonevent=&onbuttonevent />
+                <div class="tpp-main">
+                    <DPad onbuttonevent=&onbuttonevent />
+                    <AB onbuttonevent=&onbuttonevent />
+                </div>
+                <Options onbuttonevent=&onbuttonevent />
             </div>
         }
     }

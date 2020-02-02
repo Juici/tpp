@@ -1,14 +1,18 @@
 :root {
-    --dpad-size: 30vw;
-    --dpad-btn-long: calc(var(--dpad-size) / 3);
-    --dpad-btn-short: calc(var(--dpad-size) / 3);
-    --dpad-dimple-size: calc(var(--dpad-btn-short) * 0.5);
+    --dpad-size: 25vw;
+    --dpad-btn-size: calc(var(--dpad-size) / 3);
+    --dpad-dimple-size: calc(var(--dpad-btn-size) * 0.5);
+
+    --option-btn-size: calc(var(--dpad-btn-size) * 0.5);
 
     --bg-color: #5563ac;
+
     --btn-color: #d4d8e3;
-    --btn-color-icon: #bdbfcc;
     --btn-down-color: #bdbfcc;
-    --btn-down-color-icon: #a0a2af;
+
+    --btn-color-icon: rgba(0, 0, 0, 0.1);
+    /*--btn-down-color-icon: rgba(0, 0, 0, 0.1);*/
+    --btn-down-color-icon: var(--btn-color-icon);
 }
 
 * {
@@ -17,19 +21,32 @@
     margin: 0;
     padding: 0;
     border: 0;
+
+    font-family: sans-serif;
 }
 
 .tpp-app {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+
+    padding: 40px;
+    height: 100vh;
+    width: 100vw;
+
+    background-color: var(--bg-color);
+}
+
+.tpp-main {
     display: flex;
     flex-direction: row;
     justify-content: space-around;
     align-items: center;
 
-    padding: 50px;
-    height: 100vh;
-    width: 100vw;
+    flex: 1 0 auto;
 
-    background-color: var(--bg-color);
+    width: 100%;
 }
 
 .tpp-btn {
@@ -51,6 +68,8 @@
     color: var(--btn-down-color-icon);
 }
 
+/* ===== D-Pad =====  */
+
 .tpp-dpad {
     position: relative;
     display: block;
@@ -62,11 +81,11 @@
     content: '';
     position: absolute;
 
-    height: var(--dpad-btn-short);
-    width: var(--dpad-btn-short);
+    height: var(--dpad-btn-size);
+    width: var(--dpad-btn-size);
 
-    top: calc(50% - (var(--dpad-btn-short) / 2));
-    left: calc(50% - (var(--dpad-btn-short) / 2));
+    top: calc(50% - (var(--dpad-btn-size) / 2));
+    left: calc(50% - (var(--dpad-btn-size) / 2));
 
     background-color: var(--btn-color);
 }
@@ -90,25 +109,22 @@
     display: flex;
     justify-content: center;
     align-items: center;
+
+    height: var(--dpad-btn-size);
+    width: var(--dpad-btn-size);
 }
 .tpp-dpad .tpp-btn .tpp-btn-icon {
-    font-size: calc(var(--dpad-size) / 4);
+    display: block;
+    font-size: calc(var(--dpad-btn-size) * 0.8);
 }
 
 .tpp-dpad .tpp-btn.tpp-dpad-up,
 .tpp-dpad .tpp-btn.tpp-dpad-down {
-    height: var(--dpad-btn-long);
-    width: var(--dpad-btn-short);
-
-    left: calc(50% - (var(--dpad-btn-short) / 2));
+    left: calc(50% - (var(--dpad-btn-size) / 2));
 }
-
 .tpp-dpad .tpp-btn.tpp-dpad-left,
 .tpp-dpad .tpp-btn.tpp-dpad-right {
-    height: var(--dpad-btn-short);
-    width: var(--dpad-btn-long);
-
-    top: calc(50% - (var(--dpad-btn-short) / 2));
+    top: calc(50% - (var(--dpad-btn-size) / 2));
 }
 
 .tpp-dpad .tpp-btn.tpp-dpad-up {
@@ -122,4 +138,100 @@
 }
 .tpp-dpad .tpp-btn.tpp-dpad-right {
     right: 0;
+}
+
+/* ===== A-B Buttons ===== */
+
+.tpp-ab {
+    position: relative;
+    display: block;
+
+    height: calc(var(--dpad-btn-size) * 2.5);
+    width: calc(var(--dpad-btn-size) * 2.5);
+}
+
+.tpp-ab .tpp-btn {
+    height: var(--dpad-btn-size);
+    width: var(--dpad-btn-size);
+
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+    border-radius: 100%;
+}
+.tpp-ab .tpp-btn .tpp-btn-icon {
+    display: block;
+    font-size: calc(var(--dpad-btn-size) * 0.6);
+}
+
+.tpp-ab .tpp-btn.tpp-btn-a,
+.tpp-ab .tpp-btn.tpp-btn-b {
+    position: absolute;
+}
+
+.tpp-ab .tpp-btn.tpp-btn-a {
+    top: calc(30% - (var(--dpad-btn-size) / 2));
+    right: 0;
+}
+.tpp-ab .tpp-btn.tpp-btn-b {
+    left: 0;
+    bottom: calc(30% - (var(--dpad-btn-size) / 2));
+}
+
+/* ===== Bumpers ===== */
+
+.tpp-bumpers {
+    position: relative;
+
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-between;
+
+    height: calc(var(--dpad-btn-size) * 0.7);
+    width: 100%;
+}
+
+.tpp-bumpers .tpp-btn {
+    height: 100%;
+    width: calc(var(--dpad-btn-size) * 2);
+
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+    border-radius: calc(var(--dpad-btn-size) / 10);
+}
+.tpp-bumpers .tpp-btn .tpp-btn-icon {
+    display: block;
+    font-size: calc(var(--dpad-btn-size) * 0.4);
+}
+
+/* ===== Options ===== */
+
+.tpp-options {
+    position: relative;
+
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: center;
+}
+
+.tpp-options .tpp-btn {
+    height: var(--option-btn-size);
+    width: calc(var(--option-btn-size) * 3);
+
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+    margin: 0 var(--option-btn-size);
+
+    border-radius: calc(var(--option-btn-size) / 4);
+}
+.tpp-options .tpp-btn .tpp-btn-icon {
+    display: block;
+    font-size: calc(var(--dpad-btn-size) * 0.3);
 }

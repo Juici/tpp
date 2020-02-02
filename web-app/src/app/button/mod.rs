@@ -64,13 +64,13 @@ impl Component for Btn {
         html! {
             <div
                 class=classes
-//                ontouchstart=self.link.callback(|_| ButtonState::Down)
-//                ontouchenter=self.link.callback(|_| ButtonState::Down)
-//                ontouchend=self.link.callback(|_| ButtonState::Up)
-//                ontouchcancel=self.link.callback(|_| ButtonState::Up)
-                onmousedown=self.link.callback(|_| ButtonState::Down)
-                onmouseup=self.link.callback(|_| ButtonState::Up)
-                onmouseout=self.link.callback(|_| ButtonState::Up)
+                ontouchstart=self.link.callback(|_| ButtonState::Down)
+                ontouchenter=self.link.callback(|_| ButtonState::Down)
+                ontouchend=self.link.callback(|_| ButtonState::Up)
+                ontouchcancel=self.link.callback(|_| ButtonState::Up)
+//                onmousedown=self.link.callback(|_| ButtonState::Down)
+//                onmouseup=self.link.callback(|_| ButtonState::Up)
+//                onmouseout=self.link.callback(|_| ButtonState::Up)
                 >
                 <span class="tpp-btn-icon">{ self.props.mapping.text() }</span>
             </div>

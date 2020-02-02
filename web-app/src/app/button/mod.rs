@@ -61,6 +61,14 @@ impl Component for Btn {
             classes.push("tpp-btn-down");
         }
 
+//        let onpointerover = self.link.callback(|event: PointerOverEvent| {
+//            if event.pressure() > 0.0 {
+//                ButtonState::Down
+//            } else {
+//                ButtonState::Up
+//            }
+//        });
+
         html! {
             <div
                 class=classes
@@ -71,6 +79,7 @@ impl Component for Btn {
 //                onmousedown=self.link.callback(|_| ButtonState::Down)
 //                onmouseup=self.link.callback(|_| ButtonState::Up)
 //                onmouseout=self.link.callback(|_| ButtonState::Up)
+//                onpointerover=&onpointerover
                 >
                 <span class="tpp-btn-icon">{ self.props.mapping.text() }</span>
             </div>

@@ -1,71 +1,65 @@
-use std::env;
-use std::net::SocketAddr;
+mod input;
+
+use std::thread;
 
 use anyhow::Result;
-use futures::{SinkExt, StreamExt};
-use tokio::net::{TcpListener, TcpStream};
-use tokio_tungstenite::accept_async;
-use tokio_tungstenite::tungstenite::Error as TungsteniteError;
+use std::sync::mpsc::Sender;
+use tpp_core::button::ButtonEvent;
+use tpp_core::ws::WsRequest;
+use websocket::sync::{Client, Server};
+use websocket::{Message, OwnedMessage};
 
-const WS_ADDRESS: &str = "127.0.0.1:9001";
+const WS_ADDRESS: &str = "localhost:9001";
 
-#[tokio::main]
-async fn main() -> Result<()> {
-    if env::var_os("RUST_LOG").is_none() {
-        if cfg!(debug_assertions) {
-            env::set_var("RUST_LOG", "debug");
-        } else {
-            env::set_var("RUST_LOG", "info");
-        }
-    }
-
+fn main() -> Result<()> {
     pretty_env_logger::init();
 
-    let mut listener = TcpListener::bind(WS_ADDRESS).await?;
-    log::info!("listening on: {}", WS_ADDRESS);
+    let input = input::spawn_handler();
 
-    loop {
-        let (stream, _) = listener.accept().await?;
-        let peer = match stream.peer_addr() {
-            Ok(peer) => peer,
-            Err(err) => anyhow::bail!("connected streams should have a peer address: {:?}", err),
-        };
+    let server = Server::bind(WS_ADDRESS)?;
 
-        log::debug!("peer address: {}", peer);
+    for connection in server.filter_map(Result::ok) {
+        let input = input.clone();
 
-        tokio::spawn(accept_connection(peer, stream));
+        thread::spawn(move || {
+            let input = input;
+
+            let client: Client<_> = connection.accept().unwrap();
+
+            let (mut rx, mut tx) = client.split().unwrap();
+
+            for message in rx.incoming_messages() {
+                if let Err(err) = handle_message(&input, message) {
+                    log::error!("{:?}", err);
+
+                    let _ = tx.send_message(&Message::close());
+                    return;
+                }
+            }
+        });
     }
+
+    Ok(())
 }
 
-async fn accept_connection(peer: SocketAddr, stream: TcpStream) {
-    if let Err(err) = handle_connection(peer, stream).await {
-        if let Some(err) = err.downcast_ref::<TungsteniteError>() {
-            match err {
-                // No error here.
-                TungsteniteError::ConnectionClosed
-                | TungsteniteError::Protocol(_)
-                | TungsteniteError::Utf8 => return,
-                // This is an error, fallthrough to logging below.
-                _ => {}
+fn handle_message(
+    input: &Sender<ButtonEvent>,
+    message: websocket::WebSocketResult<OwnedMessage>,
+) -> Result<()> {
+    match message? {
+        OwnedMessage::Binary(msg) => {
+            let msg: WsRequest = bincode::deserialize(&msg)?;
+
+            log::trace!("handle request: {:?}", msg);
+
+            match msg {
+                WsRequest::ButtonEvent(event) => {
+                    log::trace!("button event: {:?}", event);
+                    input.send(event)?;
+                }
             }
         }
-
-        log::error!("error processing connection: {:?}", err);
-    }
-}
-
-async fn handle_connection(peer: SocketAddr, stream: TcpStream) -> Result<()> {
-    let mut ws_stream = accept_async(stream).await?;
-
-    log::debug!("new ws connection: {}", peer);
-
-    while let Some(msg) = ws_stream.next().await {
-        let msg = msg?;
-        if msg.is_text() || msg.is_binary() {
-            log::debug!("ws msg: {}", msg);
-
-            ws_stream.send(msg).await?;
-        }
+        _ => {}
     }
 
     Ok(())

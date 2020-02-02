@@ -14,11 +14,9 @@ members = ["core", "web-app"]
 
 [dependencies]
 anyhow = "1.0"
-bincode = "1.2"
-enigo = "0.0.13"
 futures = "0.3"
 pretty_env_logger = "0.4"
 log = "0.4"
-#tokio = { version = "0.2", features = ["macros", "tcp"] }
+tokio = { version = "0.2", features = ["macros", "tcp"] }
+tokio-tungstenite = { version = "0.10.1", features = ["connect", "tls"] }
 tpp-core = { path = "./core" }
-websocket = "0.24"

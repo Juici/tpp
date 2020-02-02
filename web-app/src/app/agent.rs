@@ -5,7 +5,7 @@ use yew::prelude::worker::*;
 use yew::services::websocket::{WebSocketService, WebSocketStatus, WebSocketTask};
 
 //const WS_ENDPOINT: &str = "ws://localhost:9001/";
-const WS_ENDPOINT: &str = "wss://james-tjjg.localhost.run/";
+const WS_ENDPOINT: &str = "wss://thin-warthog-20.telebit.io";
 
 #[derive(Debug)]
 pub enum Msg {

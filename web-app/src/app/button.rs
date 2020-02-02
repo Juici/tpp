@@ -1,5 +1,5 @@
 use stdweb::web::event::MouseButton;
-use tpp_core::{Button, ButtonEvent, ButtonState};
+use tpp_core::button::{Button, ButtonEvent, ButtonState};
 use yew::prelude::*;
 
 #[derive(Debug)]

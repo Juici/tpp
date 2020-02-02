@@ -1,33 +1,15 @@
 use anyhow::Result;
-use serde::{Deserialize, Serialize};
-use tpp_core::ButtonEvent;
+use tpp_core::ws::{ConnectionStatus, WsRequest, WsResponse};
 use yew::format::Bincode;
 use yew::prelude::worker::*;
 use yew::services::websocket::{WebSocketService, WebSocketStatus, WebSocketTask};
 
 const WS_ENDPOINT: &str = "ws://localhost:9001/";
 
-#[derive(Clone, Copy, Debug, Eq, PartialEq, Serialize, Deserialize)]
-pub enum ConnectionStatus {
-    Connected,
-    Connecting,
-    Disconnected,
-}
-
 #[derive(Debug)]
 pub enum Msg {
     WsResponse(Result<WsResponse>),
     WsStatusChanged(WebSocketStatus),
-}
-
-#[derive(Debug, Deserialize, Serialize)]
-pub enum WsRequest {
-    ButtonEvent(ButtonEvent),
-}
-
-#[derive(Debug, Deserialize, Serialize)]
-pub enum WsResponse {
-    WsStatusChanged(ConnectionStatus),
 }
 
 pub struct NetworkAgent {
@@ -78,7 +60,7 @@ impl Agent for NetworkAgent {
 
         let task = agent
             .service
-            .connect_binary(WS_ENDPOINT, callback, notification)
+            .connect(WS_ENDPOINT, callback, notification)
             .unwrap();
         agent.connection = Some(task);
 
@@ -104,7 +86,7 @@ impl Agent for NetworkAgent {
         log::debug!("agent bridge connected");
     }
 
-    fn handle_input(&mut self, msg: Self::Input, id: HandlerId) {
+    fn handle_input(&mut self, msg: Self::Input, _id: HandlerId) {
         match self.connection.as_mut() {
             Some(connection) => connection.send_binary(Bincode(&msg)),
             None => log::error!(

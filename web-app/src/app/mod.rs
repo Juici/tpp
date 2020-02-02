@@ -1,9 +1,10 @@
 mod agent;
 mod button;
 
+use tpp_core::ws::{WsRequest, WsResponse};
 use yew::prelude::*;
 
-use self::agent::{NetworkAgent, WsRequest, WsResponse};
+use self::agent::NetworkAgent;
 use self::button::DPad;
 
 pub enum Msg {

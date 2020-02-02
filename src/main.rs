@@ -1,1 +1,72 @@
-fn main() {}
+use std::env;
+use std::net::SocketAddr;
+
+use anyhow::Result;
+use futures::{SinkExt, StreamExt};
+use tokio::net::{TcpListener, TcpStream};
+use tokio_tungstenite::accept_async;
+use tokio_tungstenite::tungstenite::Error as TungsteniteError;
+
+const WS_ADDRESS: &str = "127.0.0.1:9001";
+
+#[tokio::main]
+async fn main() -> Result<()> {
+    if env::var_os("RUST_LOG").is_none() {
+        if cfg!(debug_assertions) {
+            env::set_var("RUST_LOG", "debug");
+        } else {
+            env::set_var("RUST_LOG", "info");
+        }
+    }
+
+    pretty_env_logger::init();
+
+    let mut listener = TcpListener::bind(WS_ADDRESS).await?;
+    log::info!("listening on: {}", WS_ADDRESS);
+
+    loop {
+        let (stream, _) = listener.accept().await?;
+        let peer = match stream.peer_addr() {
+            Ok(peer) => peer,
+            Err(err) => anyhow::bail!("connected streams should have a peer address: {:?}", err),
+        };
+
+        log::debug!("peer address: {}", peer);
+
+        tokio::spawn(accept_connection(peer, stream));
+    }
+}
+
+async fn accept_connection(peer: SocketAddr, stream: TcpStream) {
+    if let Err(err) = handle_connection(peer, stream).await {
+        if let Some(err) = err.downcast_ref::<TungsteniteError>() {
+            match err {
+                // No error here.
+                TungsteniteError::ConnectionClosed
+                | TungsteniteError::Protocol(_)
+                | TungsteniteError::Utf8 => return,
+                // This is an error, fallthrough to logging below.
+                _ => {}
+            }
+        }
+
+        log::error!("error processing connection: {:?}", err);
+    }
+}
+
+async fn handle_connection(peer: SocketAddr, stream: TcpStream) -> Result<()> {
+    let mut ws_stream = accept_async(stream).await?;
+
+    log::debug!("new ws connection: {}", peer);
+
+    while let Some(msg) = ws_stream.next().await {
+        let msg = msg?;
+        if msg.is_text() || msg.is_binary() {
+            log::debug!("ws msg: {}", msg);
+
+            ws_stream.send(msg).await?;
+        }
+    }
+
+    Ok(())
+}

@@ -7,6 +7,8 @@
     --bg-color: #5563ac;
     --btn-color: #d4d8e3;
     --btn-color-icon: #bdbfcc;
+    --btn-down-color: #bdbfcc;
+    --btn-down-color-icon: #a0a2af;
 }
 
 * {
@@ -41,6 +43,12 @@
 
     text-align: center;
     color: var(--btn-color-icon);
+}
+.tpp-btn.tpp-btn-down {
+    background-color: var(--btn-down-color);
+}
+.tpp-btn.tpp-btn-down .tpp-btn-icon {
+    color: var(--btn-down-color-icon);
 }
 
 .tpp-dpad {
